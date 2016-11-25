@@ -45,21 +45,19 @@ var $conform = document.getElementById("conform");//点击弹出框的确定按�
 var $delform = document.getElementById("delform");
 var flag = 0;// 确定按钮 0代表新增 ；1 代表修改
 var id = '';
+var idvalue = '';
 function searchRow(){
 	restaurantLength = restaurantlist.length;
-	for(var i = 0; i < restaurantLength; i++){
-		var insertR = $container.insertRow(1); //给表格添加一行(不包单元格)  
-		insertR.id = restaurantlist[i].id;
-		console.log(insertR.id)
-		var c0 = insertR.insertCell(0);
-		c0.innerHTML = restaurantlist[i].id;
-	    var c1 = insertR.insertCell(1);       
-	    c1.innerHTML = restaurantlist[i].name;
+	for(var i = restaurantLength-1; i >=0 ; i--){
+		var insertR = $container.insertRow(1); //给表格添加一行(不包含单元格) 
+		 insertR.id =restaurantlist[i].id ;//
+	    var c0 = insertR.insertCell(0);       
+	    c0.innerHTML = restaurantlist[i].name;
+	    var c1 = insertR.insertCell(1);
+	    c1.innerHTML = restaurantlist[i].address;
 	    var c2 = insertR.insertCell(2);
-	    c2.innerHTML = restaurantlist[i].address;
+	    c2.innerHTML = Math.round(Math.random() * 101);//?
 	    var c3 = insertR.insertCell(3);
-	    c3.innerHTML = Math.round(Math.random() * 101);//?
-	    var c4 = insertR.insertCell(4);
 	    var date = new Date();
 	    var dateuse = "";
 	    dateuse += date.getFullYear();
@@ -73,19 +71,33 @@ function searchRow(){
 		}else{
 			dateuse += date.getDay();
 		}
-	    c4.innerHTML = dateuse;
-	     var c5 = insertR.insertCell(5);
+	    c3.innerHTML = dateuse;
+	     var c4= insertR.insertCell(4);
 	     var delBtn = document.createElement('button');
 	     delBtn.className = 'del';
 	     delBtn.innerHTML = '删除';
 	     var updatebtn = document.createElement('button');
 	     updatebtn.className = 'update';
 	     updatebtn.innerHTML = '修改';
-	     c5.appendChild(delBtn);
-	     c5.appendChild(updatebtn);
+	     c4.appendChild(delBtn);
+	     c4.appendChild(updatebtn);
+	     /*点击删除按钮*/
 	     delBtn.onclick = function ()　{
 	     	if(confirm('是否确定删除？')){
 	     		this.parentNode.parentNode.remove();
+	     		 /*发送请求*/
+					xmlHttp.onreadystatechange = function (){
+					   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+					 		alert("删除成功");
+					 	}
+					 }
+					xmlHttp.open("DELETE","/api/restaurant/" + this.parentNode.parentNode.id,true);
+					 //设置表单提交时的内容类型
+			        xmlHttp.setRequestHeader("Content-Type", "application/json");
+			        var postValue = {"name":resname,"address":resaddress}
+			        console.log(postValue +"---"+this.parentNode.parentNode.id)
+			        var params = JSON.stringify(postValue)
+			        xmlHttp.send(params);
 	     	}
 	     }　
 	     /*点击修改按钮	*/
@@ -96,32 +108,31 @@ function searchRow(){
 	  		document.getElementsByTagName("legend")[0].innerHTML = '修改餐厅信息';	
 	     	var resname = document.getElementById("resname");
 	 		var resaddress = document.getElementById("resaddress");
-	 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[1].innerHTML;
-	 		resaddress.value = this.parentNode.parentNode.getElementsByTagName("td")[2].innerHTML;
-	 		//updateName = this.parentNode.parentNode.getElementsByTagName("td")[0];
-	 		id = this.parentNode.parentNode.getElementsByTagName("td");
+	 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
+	 		resaddress.value = this.parentNode.parentNode.getElementsByTagName("td")[1].innerHTML;
+	 		id = this.parentNode.parentNode.getElementsByTagName("td");	 		
+			idvalue = this.parentNode.parentNode.id;			
 	     }	    
 	}
 }
 /*增加操作*/
 function addRow(){
+	var returnId = '';//添加成功返回的id
 	var resname = document.getElementById("resname").value;
 	var resaddress = document.getElementById("resaddress").value;
     if(resname == ''){
      	alert("餐厅名称不能为空");
      	return;
     }   
-    //console.log( $container.childNodes[0].nextSibling.childNodes);
 	var insertR = $container.insertRow($container.tBodies[0].rows.length-1); //给表格添加一行(不包单元格)  ,插入行的位置
-	var c0 = insertR.insertCell(0);
-	c0.innerHTML = Math.round(Math.random() * 101);
-    var c1 = insertR.insertCell(1);       
-    c1.innerHTML = resname;
+	//insertR.id = restaurantLength+1;
+    var c0 = insertR.insertCell(0);       
+    c0.innerHTML = resname;
+    var c1 = insertR.insertCell(1);
+    c1.innerHTML = resaddress;
     var c2 = insertR.insertCell(2);
-    c2.innerHTML = resaddress;
+    c2.innerHTML = Math.round(Math.random() * 101);
     var c3 = insertR.insertCell(3);
-    c3.innerHTML = Math.round(Math.random() * 101);
-    var c4 = insertR.insertCell(4);
     var date = new Date();
     var dateuse = "";
     dateuse += date.getFullYear();
@@ -135,8 +146,8 @@ function addRow(){
 	}else{
 		dateuse += date.getDay();
 	}
-    c4.innerHTML = dateuse;
-     var c5 = insertR.insertCell(5);
+    c3.innerHTML = dateuse;
+     var c4 = insertR.insertCell(4);
      var delBtn = document.createElement('button');
      delBtn.className = 'del';
      delBtn.innerHTML = '删除';
@@ -146,22 +157,49 @@ function addRow(){
      delBtn.onclick = function () {
      	if(confirm("是否确定删除？")){
      		this.parentNode.parentNode.remove();
+     		 /*发送请求*/
+			xmlHttp.onreadystatechange = function (){
+			   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+			 		alert("删除成功");
+			 	}
+			 }
+			xmlHttp.open("DELETE","/api/restaurant/" + returnId,true);
+			 //设置表单提交时的内容类型
+	        xmlHttp.setRequestHeader("Content-Type", "application/json");
+	        var postValue = {"name":resname,"address":resaddress}
+	        console.log(postValue +"---"+this.parentNode.parentNode.id)
+	        var params = JSON.stringify(postValue)
+	        xmlHttp.send(params);
      	}
      }	
      updatebtn.onclick = function() {
 		$form.hidden = false;
 		$resformMask.hidden = false;
 		flag = 1;
-
 		document.getElementsByTagName("legend")[0].innerHTML = '修改餐厅信息';	
      	var resname = document.getElementById("resname");
  		var resaddress = document.getElementById("resaddress");
- 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[1].innerHTML;
- 		resaddress.value = this.parentNode.parentNode.getElementsByTagName("td")[2].innerHTML;
+ 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
+ 		resaddress.value = this.parentNode.parentNode.getElementsByTagName("td")[1].innerHTML;
  		id = this.parentNode.parentNode.getElementsByTagName("td");
+ 		idvalue = returnId;
      }
-     c5.appendChild(delBtn);
-     c5.appendChild(updatebtn);
+     c4.appendChild(delBtn);
+     c4.appendChild(updatebtn);
+     /*发送请求*/
+		xmlHttp.onreadystatechange = function (){
+		   if(xmlHttp.readyState == 4 && (xmlHttp.status >= 200 && xmlHttp.status < 300)){
+		   	returnId=JSON.parse(xmlHttp.responseText).id;
+		 		alert("添加成功");
+		 	}
+		 }
+		xmlHttp.open("POST","/api/restaurant/",true);
+		 //设置表单提交时的内容类型
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        var postValue = {"name":resname,"address":resaddress}
+       // console.log(postValue +"---"+this.parentNode.parentNode.id)
+        var params = JSON.stringify(postValue)
+        xmlHttp.send(params);
 
 }
 var $delform = document.getElementById("delform");
@@ -183,15 +221,28 @@ $delform.addEventListener("click", function (event){
 },false)
 $conform.addEventListener("click", function (event){
  	event.stopPropagation();
+
  	if (!flag) {
 		addRow();
+		
  	}else {
  		var resname = document.getElementById("resname").value;
  		var resaddress = document.getElementById("resaddress").value;
- 		id[1].innerHTML = resname;
- 		id[2].innerHTML = resaddress;
- 		console.log(id)
- 	}	
+ 		id[0].innerHTML = resname;
+ 		id[1].innerHTML = resaddress;
+ 		/*发送请求*/
+		xmlHttp.onreadystatechange = function (){
+		   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+		 		alert("修改成功");
+		 	}
+		 }
+		xmlHttp.open("PATCH","/api/restaurant/" + idvalue ,true);
+		 //设置表单提交时的内容类型
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        var postValue = {"name":resname,"address":resaddress}
+        var params = JSON.stringify(postValue)
+        xmlHttp.send(params);
+	}	
 	$form.hidden = true;
 	$resformMask.hidden = true;
 },false)
