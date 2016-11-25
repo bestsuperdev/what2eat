@@ -1,0 +1,105 @@
+.app{
+	width: 80%;
+	text-align: center;
+	margin: 0 auto;
+	color: grey;
+	padding-top: 50px;
+}
+		html,body{
+					padding: 0;
+					margin: 0;
+					position: relative;
+					height: 100%;
+					font-family: "微软雅黑";
+					color: #1a1a1a;
+					background: #EEE;
+		}
+		.container{
+			height: 100%;
+			box-sizing: border-box;
+			/*padding-top: 300px;*/
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+		.main{
+			/*min-width: */
+			z-index: 2;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			-webkit-transform: translate(-50%,-50%);
+			-ms-transform: translate(-50%,-50%);
+			-o-transform: translate(-50%,-50%);
+			transform: translate(-50%,-50%);
+		}
+		h1{
+			margin-top: 0;
+			white-space: nowrap;
+			font-weight: normal;
+		}
+		button{
+			border: none;
+			padding: 0 50px;
+			height: 40px;
+			line-height: 40px;
+			outline: none;
+			color: #fff;
+			/*width: 100%;*/
+			box-sizing: border-box;
+			text-align: center;
+			background-color: #478fca;
+			font-size: 14px;
+			cursor: pointer;
+		}
+		button:hover {
+		    background-color: #3783c0;
+		}
+
+		.temp {
+		    position: absolute;
+		    z-index: 1;
+		    color: #777;
+		    opacity: 0;
+		    -webkit-transition: opacity 500ms;
+		    -o-transition: opacity 500ms;
+		    transition: opacity 500ms;
+		}
+
+		.temp.start{
+			-webkit-animation: mymove 1s;
+			-o-animation: mymove 1s;
+			animation: mymove 1s;
+		}
+
+		.text{
+			color: #FF9733;
+			font-size: 18px;
+			margin-top: 20px;
+		}
+		@-moz-keyframes mymove /* Firefox */
+		{
+			0% {opacity: 0;}
+			50% {opacity: 1;}
+			100% {opacity: 0;}
+		}
+
+		@-webkit-keyframes mymove /* Safari 和 Chrome */
+		{
+			0% {opacity: 0;}
+			50% {opacity: 1;}
+			100% {opacity: 0;}
+		}
+
+		@-o-keyframes mymove /* Opera */
+		{
+			0% {opacity: 0;}
+			50% {opacity: 1;}
+			100% {opacity: 0;}
+		}
+		@keyframes mymove
+		{
+			0% {opacity: 0;}
+			50% {opacity: 1;}
+			100% {opacity: 0;}
+		}
