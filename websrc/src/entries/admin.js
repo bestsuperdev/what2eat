@@ -36,6 +36,7 @@ xmlHttp.send();
 
 var $container = document.querySelector("#eatTable");
 $container.hidden = false;
+document.getElementsByTagName("p")[0].hidden = false;
 var $del = document.getElementsByName("del");
 var $update = document.getElementsByName("update");
 var $resformMask = document.getElementById("resform-mask");//获取弹出框对象
@@ -56,22 +57,9 @@ function searchRow(){
 	    var c1 = insertR.insertCell(1);
 	    c1.innerHTML = restaurantlist[i].address;
 	    var c2 = insertR.insertCell(2);
-	    c2.innerHTML = Math.round(Math.random() * 101);
-	    var c3 = insertR.insertCell(3);
-	    var date = new Date();
-	    var dateuse = "";
-	    dateuse += date.getFullYear();
-	    if(date.getMonth()<10){
-	    	dateuse += "0"+date.getMonth();
-	    }else{
-	    	dateuse += date.getMonth();
-	    }
-		if(date.getDay()<10){
-			dateuse += "0"+date.getDay();
-		}else{
-			dateuse += date.getDay();
-		}
-	    c3.innerHTML = dateuse;
+	    c2.innerHTML = restaurantlist[i].entrytime;
+	    var c3 = insertR.insertCell(3);	    
+	    c3.innerHTML = restaurantlist[i].modifytime;
 	     var c4 = insertR.insertCell(4);
 	     var delBtn = document.createElement('button');
 	     delBtn.className = 'del';
@@ -129,23 +117,25 @@ function addRow(){
     c0.innerHTML = resname;
     var c1 = insertR.insertCell(1);
     c1.innerHTML = resaddress;
-    var c2 = insertR.insertCell(2);
-    c2.innerHTML = Math.round(Math.random() * 101);
-    var c3 = insertR.insertCell(3);
     var date = new Date();
-    var dateuse = "";
-    dateuse += date.getFullYear();
+    var entrytime = "";//录入时间
+    var modifytime = "";//修改时间
+    entrytime += date.getFullYear();
     if(date.getMonth()<10){
-    	dateuse += "0"+date.getMonth();
+    	entrytime += "0"+date.getMonth();
     }else{
-    	dateuse += date.getMonth();
+    	entrytime += date.getMonth();
     }
 	if(date.getDay()<10){
-		dateuse += "0"+date.getDay();
+		entrytime += "0"+date.getDay();
 	}else{
-		dateuse += date.getDay();
+		entrytime += date.getDay();
 	}
-    c3.innerHTML = dateuse;
+    var c2 = insertR.insertCell(2);
+    c2.innerHTML = entrytime;
+    var c3 = insertR.insertCell(3); 
+    modifytime = entrytime;
+    c3.innerHTML = modifytime ;
      var c4 = insertR.insertCell(4);
      var delBtn = document.createElement('button');
      delBtn.className = 'del';
@@ -194,7 +184,7 @@ function addRow(){
 		xmlHttp.open("POST","/api/restaurant/",true);
 		 //设置表单提交时的内容类型
         xmlHttp.setRequestHeader("Content-Type", "application/json");
-        var postValue = {"name":resname,"address":resaddress}
+        var postValue = {"name":resname,"address":resaddress,"entrytime":entrytime,"modifytime":modifytime}
         var params = JSON.stringify(postValue)
         xmlHttp.send(params);
 
@@ -224,6 +214,20 @@ $conform.addEventListener("click", function (event){
  		var resaddress = document.getElementById("resaddress").value;
  		id[0].innerHTML = resname;
  		id[1].innerHTML = resaddress;
+ 		var date = new Date();
+	    var modifytime = "";//修改时间
+	    modifytime += date.getFullYear();
+	    if(date.getMonth()<10){
+	    	modifytime += "0"+date.getMonth();
+	    }else{
+	    	modifytime += date.getMonth();
+	    }
+		if(date.getDay()<10){
+			modifytime += "0"+date.getDay();
+		}else{
+			modifytime += date.getDay();
+		}
+		id[3].innerHTML = modifytime; 
  		/*发送请求*/
 		xmlHttp.onreadystatechange = function (){
 		   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
