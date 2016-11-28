@@ -36,6 +36,7 @@ xmlHttp.send();
 
 var $container = document.querySelector("#eatTable");
 $container.hidden = false;
+document.getElementsByTagName("p")[0].hidden = false;
 var $del = document.getElementsByName("del");
 var $update = document.getElementsByName("update");
 var $resformMask = document.getElementById("resform-mask");//获取弹出框对象
