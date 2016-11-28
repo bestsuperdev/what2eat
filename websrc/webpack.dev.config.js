@@ -5,7 +5,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
 	context: path.join(__dirname,'./src/entries'),
 	entry: {
-		main : './main.js'
+		main : './main.js',
+		admin : './admin.js'
 	},
 	output: {
 		path: path.join(__dirname,'hot'),
@@ -42,11 +43,19 @@ module.exports = {
 				NODE_ENV : JSON.stringify("development")
 			}
 		}),
-		new webpack.optimize.CommonsChunkPlugin("commons", "[name].bundle.js"),
+		// new webpack.optimize.CommonsChunkPlugin("commons", "[name].bundle.js"),
 		new webpack.HotModuleReplacementPlugin(),
 		new HtmlWebpackPlugin({
 			template : path.join(__dirname,'src/index.html'),
-			inject: true
+			inject: true,
+			chunks : ['main'],
+			filename : "index.html"
+		}),
+		new HtmlWebpackPlugin({
+			template : path.join(__dirname,'src/admin.html'),
+			inject: true,
+			chunks : ['admin'],
+			filename : "admin.html"
 		})
 	],
 	debug : true,
