@@ -48,7 +48,7 @@ var id = '';
 var idvalue = '';
 function searchRow(){
 	restaurantLength = restaurantlist.length;
-	for(var i = restaurantLength-1; i >=0 ; i--){
+	for(var i = restaurantLength-1; i >= 0 ; i--){
 		var insertR = $container.insertRow(1); //给表格添加一行(不包含单元格) 
 		 insertR.id =restaurantlist[i].id ;//
 	    var c0 = insertR.insertCell(0);       
@@ -56,7 +56,7 @@ function searchRow(){
 	    var c1 = insertR.insertCell(1);
 	    c1.innerHTML = restaurantlist[i].address;
 	    var c2 = insertR.insertCell(2);
-	    c2.innerHTML = Math.round(Math.random() * 101);//?
+	    c2.innerHTML = Math.round(Math.random() * 101);
 	    var c3 = insertR.insertCell(3);
 	    var date = new Date();
 	    var dateuse = "";
@@ -72,7 +72,7 @@ function searchRow(){
 			dateuse += date.getDay();
 		}
 	    c3.innerHTML = dateuse;
-	     var c4= insertR.insertCell(4);
+	     var c4 = insertR.insertCell(4);
 	     var delBtn = document.createElement('button');
 	     delBtn.className = 'del';
 	     delBtn.innerHTML = '删除';
@@ -124,8 +124,7 @@ function addRow(){
      	alert("餐厅名称不能为空");
      	return;
     }   
-	var insertR = $container.insertRow($container.tBodies[0].rows.length-1); //给表格添加一行(不包单元格)  ,插入行的位置
-	//insertR.id = restaurantLength+1;
+	var insertR = $container.insertRow($container.tBodies[0].rows.length-1); //给表格添加一行(不包单元格),插入行的位置
     var c0 = insertR.insertCell(0);       
     c0.innerHTML = resname;
     var c1 = insertR.insertCell(1);
@@ -167,7 +166,6 @@ function addRow(){
 			 //设置表单提交时的内容类型
 	        xmlHttp.setRequestHeader("Content-Type", "application/json");
 	        var postValue = {"name":resname,"address":resaddress}
-	        console.log(postValue +"---"+this.parentNode.parentNode.id)
 	        var params = JSON.stringify(postValue)
 	        xmlHttp.send(params);
      	}
@@ -189,7 +187,7 @@ function addRow(){
      /*发送请求*/
 		xmlHttp.onreadystatechange = function (){
 		   if(xmlHttp.readyState == 4 && (xmlHttp.status >= 200 && xmlHttp.status < 300)){
-		   	returnId=JSON.parse(xmlHttp.responseText).id;
+		   	returnId = JSON.parse(xmlHttp.responseText).id;
 		 		alert("添加成功");
 		 	}
 		 }
@@ -197,13 +195,11 @@ function addRow(){
 		 //设置表单提交时的内容类型
         xmlHttp.setRequestHeader("Content-Type", "application/json");
         var postValue = {"name":resname,"address":resaddress}
-       // console.log(postValue +"---"+this.parentNode.parentNode.id)
         var params = JSON.stringify(postValue)
         xmlHttp.send(params);
 
 }
 var $delform = document.getElementById("delform");
-
 var $addRow = document.getElementsByName("addRow");
 /*点击添加按钮*/
 $addRow[0].addEventListener("click", function (envent){
@@ -221,10 +217,8 @@ $delform.addEventListener("click", function (event){
 },false)
 $conform.addEventListener("click", function (event){
  	event.stopPropagation();
-
  	if (!flag) {
-		addRow();
-		
+		addRow();		
  	}else {
  		var resname = document.getElementById("resname").value;
  		var resaddress = document.getElementById("resaddress").value;
