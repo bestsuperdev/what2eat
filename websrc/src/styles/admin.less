@@ -24,7 +24,7 @@ html,body{
 .restitle{
 	position: relative;
 	font-size: 30px;
-	color: #adecad;
+	color: #000;
 	font-weight: bold;
 }
 table.eatTable{
@@ -55,16 +55,21 @@ table.eatTable{
 }
 .conform,.delform{
 	position:relative;	
+	margin-top: 20px;
 }	
 .resform{
+	margin-left: -200px;  
+	margin-top: -125px;
 	position: absolute;
-	left:45%;
-	top:45%;
-	background-color: rgba(88,88,88,.6);
-	border-radius: 6px 6px;
+	width:400px;
+	height: 250px;
+	left:50%;
+	top:50%;
+	background-color: #eee;
+	border-radius: 6px;
 	font-size: 22px;
 	z-index: 1000;
-
+	text-align: center;
 }
 .resform-mask{
 	position: fixed;
@@ -75,4 +80,8 @@ table.eatTable{
     background-color: rgba(55,55,55,.6);
     height: 100%;
     z-index: 1000;
+}
+#resname,#resaddress{
+	height: 22px;
+	width: 240px;
 }
