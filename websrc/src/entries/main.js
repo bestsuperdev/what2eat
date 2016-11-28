@@ -38,7 +38,7 @@ for (var i = scripts.length - 1; i >= 0; i--) {
     var $text = document.querySelector('#text');
     var $h1 = document.querySelector('h1');
     var date = new Date();
-    var state = 'stop'
+    var state = 'stop' 
     var bghandler = null;
     var handler = null;
     
@@ -76,7 +76,7 @@ for (var i = scripts.length - 1; i >= 0; i--) {
         bghandler = null;
 
         $btn.innerHTML = '开始'
-        $text.innerHTML = foods[Math.floor(Math.random() * foods.length)].name;
+        $text.innerHTML = foods[Math.floor(Math.random() * foods.length)].name+" "+foods[Math.floor(Math.random() * foods.length)].address;
 
       }else if(state === 'stop'){
         console.log(3)
