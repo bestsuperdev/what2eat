@@ -10,7 +10,7 @@ module.exports = {
 		commons : ['react','react-dom']
 	},
 	output: {
-		path: path.join(__dirname,'dist'),
+		path: path.join('../public', ''),
 		// publicPath: "/bundles/",
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
