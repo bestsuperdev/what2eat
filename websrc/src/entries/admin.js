@@ -93,7 +93,7 @@ function searchRow(){
 	     	$form.hidden = false;
 	     	$resformMask.hidden = false;
 	     	flag = 1;
-	  		document.getElementsByTagName("legend")[0].innerHTML = '修改餐厅信息';	
+	  		document.getElementsByTagName("h3")[0].innerHTML = '修改餐厅信息';	
 	     	var resname = document.getElementById("resname");
 	 		var resaddress = document.getElementById("resaddress");
 	 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
@@ -121,15 +121,15 @@ function addRow(){
     var entrytime = "";//录入时间
     var modifytime = "";//修改时间
     entrytime += date.getFullYear();
-    if(date.getMonth()<10){
-    	entrytime += "0"+date.getMonth();
+    if((date.getMonth()+1)<10){
+    	entrytime += "0"+(date.getMonth()+1);
     }else{
-    	entrytime += date.getMonth();
+    	entrytime += (date.getMonth()+1);
     }
-	if(date.getDay()<10){
-		entrytime += "0"+date.getDay();
+	if(date.getDate()<10){
+		entrytime += "0"+date.getDate();
 	}else{
-		entrytime += date.getDay();
+		entrytime += date.getDate();
 	}
     var c2 = insertR.insertCell(2);
     c2.innerHTML = entrytime;
@@ -164,7 +164,7 @@ function addRow(){
 		$form.hidden = false;
 		$resformMask.hidden = false;
 		flag = 1;
-		document.getElementsByTagName("legend")[0].innerHTML = '修改餐厅信息';	
+		document.getElementsByTagName("h3")[0].innerHTML = '修改餐厅信息';	
      	var resname = document.getElementById("resname");
  		var resaddress = document.getElementById("resaddress");
  		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
@@ -217,15 +217,15 @@ $conform.addEventListener("click", function (event){
  		var date = new Date();
 	    var modifytime = "";//修改时间
 	    modifytime += date.getFullYear();
-	    if(date.getMonth()<10){
-	    	modifytime += "0"+date.getMonth();
+	    if((date.getMonth()+1)<10){
+	    	modifytime += "0"+(date.getMonth()+1);
 	    }else{
-	    	modifytime += date.getMonth();
+	    	modifytime += (date.getMonth()+1);
 	    }
-		if(date.getDay()<10){
-			modifytime += "0"+date.getDay();
+		if(date.getDate()<10){
+			modifytime += "0"+date.getDate();
 		}else{
-			modifytime += date.getDay();
+			modifytime += date.getDate();
 		}
 		id[3].innerHTML = modifytime; 
  		/*发送请求*/
@@ -234,6 +234,7 @@ $conform.addEventListener("click", function (event){
 		 		alert("修改成功");
 		 	}
 		 }
+		 //patch方法是对已有的内容进行局部更新
 		xmlHttp.open("PATCH","/api/restaurant/" + idvalue ,true);
 		 //设置表单提交时的内容类型
         xmlHttp.setRequestHeader("Content-Type", "application/json");
