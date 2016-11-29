@@ -2,28 +2,35 @@ var express = require('express');
 var router = express.Router();
 var low = require('lowdb');
 var restaurant = low('db/restaurant.json');
+var util = require('../util');
 
-router.get('/list', function(req, res, next) {
+router.get('/list', function(req, res) {
     var restaurantList = restaurant.get('restaurant_list').value();
-    console.log('cookies: ', req.body.cookies);
     res.json(restaurantList);
 });
 
-router.post('/add', function (req, res) {
-    if (req && req.body.address && req.body.name) {
+router.post('/save', function (req, res) {
+
+    for (var item in req.body) {
+        if (!req.body[item]) {
+            return res.json({code: -1, message: item + ' undefined'});
+        }
+    }
+
+    if (req.body.address && req.body.name) {
+        var date = util.date('Y-m-d H:i:s', new Date());
         var listSize = restaurant.get('restaurant_list').size().value();
-        var newRestaurant = {id: listSize + "", address: req.body.address, name: req.body.name};
+        var newRestaurant = {id: listSize + "", address: req.body.address, name: req.body.name, createTime: date, updateTime: date};
         restaurant.get('restaurant_list').push(newRestaurant).value();
-        res.json({code: 0, id: listSize});
+        res.json({code: 0, restaurant: newRestaurant});
     } else {
-        res.json({code: -1, message: req});
+        res.json({code: -1, message: 'save failed'});
     }
 });
 
 router.post('/remove', function (req, res) {
     if (req && req.body.id) {
         restaurant.get('restaurant_list').remove({'id': req.body.id}).value();
-        console.log(restaurant.get('restaurant_list').value());
         res.json({code: 0});
     } else {
         return res.json({code: -1, message: 'id undefined'});
@@ -31,20 +38,22 @@ router.post('/remove', function (req, res) {
 });
 
 router.post('/edit', function (req, res) {
-    if (!req.body.id) {
-        return res.json({code: -1, message: 'id undefined'});
-    }
 
-    if (req && req.body.address) {
-        restaurant.get('restaurant_list').find({id: req.body.id}).set('address', req.body.address).value();
+    for (var item in req.body) {
+        if (!req.body[item]) {
+            return res.json({code: -1, message: item + ' undefined'})
+        }
     }
 
     if (req && req.body.name) {
         restaurant.get('restaurant_list').find({id: req.body.id}).set('name', req.body.name).value();
+    } else if (req && req.body.address) {
+        restaurant.get('restaurant_list').find({id: req.body.id}).set('address', req.body.address).value();
     }
 
+    restaurant.get('restaurant_list').find({id: req.body.id}).set('updateTime', util.date('Y-m-d H:i:s', new Date())).value();
     var restaurantRes = restaurant.get('restaurant_list').find({id: req.body.id}).value();
-    res.json(restaurantRes);
+    res.json({code: 0, restaurant: restaurantRes});
 });
 
 module.exports = router;
