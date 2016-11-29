@@ -8,8 +8,8 @@ require('styles/main.less')
 var scripts = document.getElementsByTagName('script')
 for (var i = scripts.length - 1; i >= 0; i--) {
 	if(scripts[i].src.indexOf('.bundle.js') >= 0){
-		var src = scripts[i].getAttribute('src')
-		__webpack_public_path__ = src.substr(0, src.lastIndexOf('/') + 1)
+		var src = scripts[i].getAttribute('src');
+		__webpack_public_path__ = src.substr(0, src.lastIndexOf('/') + 1);
 		break
 	}
 }
