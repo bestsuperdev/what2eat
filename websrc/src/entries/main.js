@@ -30,7 +30,7 @@ for (var i = scripts.length - 1; i >= 0; i--) {
             foods=JSON.parse(foodName);
       }     
     }
-     xmlHttp.open("GET","/api/restaurant",true);
+     xmlHttp.open("GET","/api/restaurant/list",true);
      xmlHttp.send();
     var $btn = document.querySelector('#btn');
     $btn.hidden=false;

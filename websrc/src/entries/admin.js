@@ -12,28 +12,16 @@ for (var i = scripts.length - 1; i >= 0; i--) {
 		break
 	}
 }
-
-var xmlHttp;
-var restaurantlists;//餐馆列表
-var restaurantlist;
+var ajax = require('../scripts/utils/ajax');
 var restaurantLength;
-if(window.XMLHttpRequest){
- 	xmlHttp = new XMLHttpRequest();
- }else{
- 	xmlHttp = new ActiveXObject("Microsoft.HMLHTTP");
- }
-
- xmlHttp.onreadystatechange = function (){
- 	if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
- 		restaurantlists = xmlHttp.responseText;
- 		restaurantlist = JSON.parse(restaurantlists);
- 	 	searchRow();	
- 	}
- }
-
-xmlHttp.open("GET","/api/restaurant",true);
-xmlHttp.send();
-
+ajax({
+	type:'GET',
+	url:'/api/restaurant/list',
+	body:'',
+	success:function (env){
+						searchRow(env);
+	}
+})
 var $container = document.querySelector("#eatTable");
 $container.hidden = false;
 document.getElementsByTagName("p")[0].hidden = false;
@@ -47,19 +35,19 @@ var $delform = document.getElementById("delform");
 var flag = 0;// 确定按钮 0代表新增 ；1 代表修改
 var id = '';
 var idvalue = '';
-function searchRow(){
-	restaurantLength = restaurantlist.length;
+function searchRow(env){
+	restaurantLength = env.length;
 	for(var i = restaurantLength-1; i >= 0 ; i--){
 		var insertR = $container.insertRow(1); //给表格添加一行(不包含单元格) 
-		 insertR.id =restaurantlist[i].id ;//
+		 insertR.id =env[i].id ;//
 	    var c0 = insertR.insertCell(0);       
-	    c0.innerHTML = restaurantlist[i].name;
+	    c0.innerHTML = env[i].name;
 	    var c1 = insertR.insertCell(1);
-	    c1.innerHTML = restaurantlist[i].address;
+	    c1.innerHTML = env[i].address;
 	    var c2 = insertR.insertCell(2);
-	    c2.innerHTML = restaurantlist[i].entrytime;
+	    c2.innerHTML = env[i].createTime;
 	    var c3 = insertR.insertCell(3);	    
-	    c3.innerHTML = restaurantlist[i].modifytime;
+	    c3.innerHTML = env[i].updateTime;
 	     var c4 = insertR.insertCell(4);
 	     var delBtn = document.createElement('button');
 	     delBtn.className = 'del';
@@ -73,19 +61,14 @@ function searchRow(){
 	     delBtn.onclick = function ()　{
 	     	if(confirm('是否确定删除？')){
 	     		this.parentNode.parentNode.remove();
-	     		 /*发送请求*/
-					xmlHttp.onreadystatechange = function (){
-					   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
-					 		alert("删除成功");
-					 	}
-					 }
-					xmlHttp.open("DELETE","/api/restaurant/" + this.parentNode.parentNode.id,true);
-					 //设置表单提交时的内容类型
-			        xmlHttp.setRequestHeader("Content-Type", "application/json");
-			        var postValue = {"name":resname,"address":resaddress}
-			        console.log(postValue +"---"+this.parentNode.parentNode.id)
-			        var params = JSON.stringify(postValue)
-			        xmlHttp.send(params);
+		         ajax({
+						type:'POST',
+						url:'/api/restaurant/remove',
+						body:{"id":this.parentNode.parentNode.id},
+						success:function (env){
+											alert("删除成功");
+						}
+					 })			
 	     	}
 	     }　
 	     /*点击修改按钮	*/
@@ -106,60 +89,66 @@ function searchRow(){
 /*增加操作*/
 function addRow(){
 	var returnId = '';//添加成功返回的id
+	var createTime = '';//创建时间,服务端返回
+	var updateTime = '';//修改时间
 	var resname = document.getElementById("resname").value;
 	var resaddress = document.getElementById("resaddress").value;
     if(resname == ''){
      	alert("餐厅名称不能为空");
      	return;
     }   
+    ajax({
+			type:'POST',//添加操作
+			url:'/api/restaurant/save',
+			body:{"name":resname,"address":resaddress},
+			success:function (env){
+				returnId = env.id;
+				createTime = env.createTime;
+				updateTime = env.updateTime;
+				if(env.code == 0){
+					alert("添加成功");
+					insertRow(returnId,resname,resaddress,createTime,updateTime);
+				}else{
+					alert(env.message)
+					console.log("111")
+					return;
+				}
+			}
+		 })  	
+}
+
+function insertRow (returnId,resname,resaddress,createTime, updateTime) {
 	var insertR = $container.insertRow($container.tBodies[0].rows.length-1); //给表格添加一行(不包单元格),插入行的位置
     var c0 = insertR.insertCell(0);       
     c0.innerHTML = resname;
     var c1 = insertR.insertCell(1);
     c1.innerHTML = resaddress;
     var date = new Date();
-    var entrytime = "";//录入时间
-    var modifytime = "";//修改时间
-    entrytime += date.getFullYear();
-    if((date.getMonth()+1)<10){
-    	entrytime += "0"+(date.getMonth()+1);
-    }else{
-    	entrytime += (date.getMonth()+1);
-    }
-	if(date.getDate()<10){
-		entrytime += "0"+date.getDate();
-	}else{
-		entrytime += date.getDate();
-	}
     var c2 = insertR.insertCell(2);
-    c2.innerHTML = entrytime;
+    c2.innerHTML = createTime;
     var c3 = insertR.insertCell(3); 
-    modifytime = entrytime;
-    c3.innerHTML = modifytime ;
+    c3.innerHTML = updateTime;
      var c4 = insertR.insertCell(4);
      var delBtn = document.createElement('button');
      delBtn.className = 'del';
      delBtn.innerHTML = '删除';
      var updatebtn = document.createElement('button');
      updatebtn.className = 'update';
-     updatebtn.innerHTML = '修改';
-     delBtn.onclick = function () {
-     	if(confirm("是否确定删除？")){
+     updatebtn.innerHTML = '修改'; 
+	 /*点击删除按钮*/
+     delBtn.onclick = function ()　{
+     	if(confirm('是否确定删除？')){
      		this.parentNode.parentNode.remove();
-     		 /*发送请求*/
-			xmlHttp.onreadystatechange = function (){
-			   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
-			 		alert("删除成功");
-			 	}
-			 }
-			xmlHttp.open("DELETE","/api/restaurant/" + returnId,true);
-			 //设置表单提交时的内容类型
-	        xmlHttp.setRequestHeader("Content-Type", "application/json");
-	        var postValue = {"name":resname,"address":resaddress}
-	        var params = JSON.stringify(postValue)
-	        xmlHttp.send(params);
+	         ajax({
+					type:'POST',
+					url:'/api/restaurant/remove',
+					body:{"id":returnId},
+					success:function (env){
+										alert("删除成功");
+					}
+				 })			
      	}
-     }	
+     }　
      updatebtn.onclick = function() {
 		$form.hidden = false;
 		$resformMask.hidden = false;
@@ -174,21 +163,8 @@ function addRow(){
      }
      c4.appendChild(delBtn);
      c4.appendChild(updatebtn);
-     /*发送请求*/
-		xmlHttp.onreadystatechange = function (){
-		   if(xmlHttp.readyState == 4 && (xmlHttp.status >= 200 && xmlHttp.status < 300)){
-		   	returnId = JSON.parse(xmlHttp.responseText).id;
-		 		alert("添加成功");
-		 	}
-		 }
-		xmlHttp.open("POST","/api/restaurant/",true);
-		 //设置表单提交时的内容类型
-        xmlHttp.setRequestHeader("Content-Type", "application/json");
-        var postValue = {"name":resname,"address":resaddress,"entrytime":entrytime,"modifytime":modifytime}
-        var params = JSON.stringify(postValue)
-        xmlHttp.send(params);
-
 }
+
 var $delform = document.getElementById("delform");
 var $addRow = document.getElementsByName("addRow");
 /*点击添加按钮*/
@@ -212,35 +188,21 @@ $conform.addEventListener("click", function (event){
  	}else {
  		var resname = document.getElementById("resname").value;
  		var resaddress = document.getElementById("resaddress").value;
- 		id[0].innerHTML = resname;
- 		id[1].innerHTML = resaddress;
- 		var date = new Date();
-	    var modifytime = "";//修改时间
-	    modifytime += date.getFullYear();
-	    if((date.getMonth()+1)<10){
-	    	modifytime += "0"+(date.getMonth()+1);
-	    }else{
-	    	modifytime += (date.getMonth()+1);
-	    }
-		if(date.getDate()<10){
-			modifytime += "0"+date.getDate();
-		}else{
-			modifytime += date.getDate();
-		}
-		id[3].innerHTML = modifytime; 
- 		/*发送请求*/
-		xmlHttp.onreadystatechange = function (){
-		   if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
-		 		alert("修改成功");
-		 	}
-		 }
-		 //patch方法是对已有的内容进行局部更新
-		xmlHttp.open("PATCH","/api/restaurant/" + idvalue ,true);
-		 //设置表单提交时的内容类型
-        xmlHttp.setRequestHeader("Content-Type", "application/json");
-        var postValue = {"name":resname,"address":resaddress}
-        var params = JSON.stringify(postValue)
-        xmlHttp.send(params);
+        ajax({
+				type:'POST',//修改操作
+				url:'/api/restaurant/edit',
+				body:{"id":idvalue,"name":resname,"address":resaddress},
+				success:function (env){
+					if (env.code == 0) {
+						alert("修改成功");
+						id[0].innerHTML = env.name;
+						id[1].innerHTML = env.address;
+						id[3].innerHTML = env.updateTime; 
+					} else {
+						alert(env.message)
+					}
+				}
+			 })
 	}	
 	$form.hidden = true;
 	$resformMask.hidden = true;
