@@ -22,7 +22,8 @@ router.post('/save', function (req, res) {
         var listSize = restaurant.get('restaurant_list').size().value();
         var newRestaurant = {id: listSize + "", address: req.body.address, name: req.body.name, createTime: date, updateTime: date};
         restaurant.get('restaurant_list').push(newRestaurant).value();
-        res.json({code: 0, restaurant: newRestaurant});
+        newRestaurant.code = 0;
+        res.json(newRestaurant);
     } else {
         res.json({code: -1, message: 'save failed'});
     }
@@ -53,7 +54,9 @@ router.post('/edit', function (req, res) {
 
     restaurant.get('restaurant_list').find({id: req.body.id}).set('updateTime', util.date('Y-m-d H:i:s', new Date())).value();
     var restaurantRes = restaurant.get('restaurant_list').find({id: req.body.id}).value();
-    res.json({code: 0, restaurant: restaurantRes});
+    var resObject = {code: 0, id: restaurantRes.id, address: restaurantRes.address, name: restaurantRes.name,
+        createTime: restaurantRes.createTime, updateTime: restaurantRes.updateTime};
+    res.json(resObject);
 });
 
 module.exports = router;
