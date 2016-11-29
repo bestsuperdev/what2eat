@@ -14,7 +14,7 @@ router.post('/add', function (req, res) {
         var listSize = restaurant.get('restaurant_list').size().value();
         var newRestaurant = {id: listSize + "", address: req.body.address, name: req.body.name};
         restaurant.get('restaurant_list').push(newRestaurant).value();
-        res.json({code: 0});
+        res.json({code: 0, id: listSize});
     } else {
         res.json({code: -1, message: req});
     }

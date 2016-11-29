@@ -37,7 +37,7 @@ webpackJsonp([1],{
 	    foods = JSON.parse(foodName);
 	  }
 	};
-	xmlHttp.open("GET", "/api/restaurant", true);
+	xmlHttp.open("GET", "/api/restaurant/list", true);
 	xmlHttp.send();
 	var $btn = document.querySelector('#btn');
 	$btn.hidden = false;
