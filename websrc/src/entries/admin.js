@@ -38,52 +38,7 @@ var idvalue = '';
 function searchRow(env){
 	restaurantLength = env.length;
 	for(var i = restaurantLength-1; i >= 0 ; i--){
-		var insertR = $container.insertRow(1); //给表格添加一行(不包含单元格) 
-		 insertR.id =env[i].id ;//
-	    var c0 = insertR.insertCell(0);       
-	    c0.innerHTML = env[i].name;
-	    var c1 = insertR.insertCell(1);
-	    c1.innerHTML = env[i].address;
-	    var c2 = insertR.insertCell(2);
-	    c2.innerHTML = env[i].createTime;
-	    var c3 = insertR.insertCell(3);	    
-	    c3.innerHTML = env[i].updateTime;
-	     var c4 = insertR.insertCell(4);
-	     var delBtn = document.createElement('button');
-	     delBtn.className = 'del';
-	     delBtn.innerHTML = '删除';
-	     var updatebtn = document.createElement('button');
-	     updatebtn.className = 'update';
-	     updatebtn.innerHTML = '修改';
-	     c4.appendChild(delBtn);
-	     c4.appendChild(updatebtn);
-	     /*点击删除按钮*/
-	     delBtn.onclick = function ()　{
-	     	if(confirm('是否确定删除？')){
-	     		this.parentNode.parentNode.remove();
-		         ajax({
-						type:'POST',
-						url:'/api/restaurant/remove',
-						body:{"id":this.parentNode.parentNode.id},
-						success:function (env){
-											alert("删除成功");
-						}
-					 })			
-	     	}
-	     }　
-	     /*点击修改按钮	*/
-	     updatebtn.onclick = function() {
-	     	$form.hidden = false;
-	     	$resformMask.hidden = false;
-	     	flag = 1;
-	  		document.getElementsByTagName("h3")[0].innerHTML = '修改餐厅信息';	
-	     	var resname = document.getElementById("resname");
-	 		var resaddress = document.getElementById("resaddress");
-	 		resname.value = this.parentNode.parentNode.getElementsByTagName("td")[0].innerHTML;
-	 		resaddress.value = this.parentNode.parentNode.getElementsByTagName("td")[1].innerHTML;
-	 		id = this.parentNode.parentNode.getElementsByTagName("td");	 		
-			idvalue = this.parentNode.parentNode.id;			
-	     }	    
+		insertRow(1,env[i].id,env[i].name,env[i].address,env[i].createTime,env[i].updateTime)		
 	}
 }
 /*增加操作*/
@@ -107,18 +62,16 @@ function addRow(){
 				updateTime = env.updateTime;
 				if(env.code == 0){
 					alert("添加成功");
-					insertRow(returnId,resname,resaddress,createTime,updateTime);
+					insertRow(($container.tBodies[0].rows.length-1),returnId,resname,resaddress,createTime,updateTime);
 				}else{
 					alert(env.message)
-					console.log("111")
 					return;
 				}
 			}
 		 })  	
 }
-
-function insertRow (returnId,resname,resaddress,createTime, updateTime) {
-	var insertR = $container.insertRow($container.tBodies[0].rows.length-1); //给表格添加一行(不包单元格),插入行的位置
+function insertRow (rowPosition,returnId,resname,resaddress,createTime, updateTime) {
+	var insertR = $container.insertRow(rowPosition); //给表格添加一行(不包单元格),插入行的位置
     var c0 = insertR.insertCell(0);       
     c0.innerHTML = resname;
     var c1 = insertR.insertCell(1);
@@ -161,6 +114,7 @@ function insertRow (returnId,resname,resaddress,createTime, updateTime) {
  		id = this.parentNode.parentNode.getElementsByTagName("td");
  		idvalue = returnId;
      }
+     
      c4.appendChild(delBtn);
      c4.appendChild(updatebtn);
 }
