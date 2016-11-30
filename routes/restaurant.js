@@ -46,14 +46,19 @@ router.post('/edit', function (req, res) {
         }
     }
 
-    if (req && req.body.name) {
-        restaurant.get('restaurant_list').find({id: req.body.id}).set('name', req.body.name).value();
-    } else if (req && req.body.address) {
-        restaurant.get('restaurant_list').find({id: req.body.id}).set('address', req.body.address).value();
+    var reqBody = req.body;
+    var restaurantDB = restaurant.get('restaurant_list').find({id: reqBody.id});
+
+    if (req && reqBody.name) {
+        restaurantDB.set('name', reqBody.name).value();
     }
 
-    restaurant.get('restaurant_list').find({id: req.body.id}).set('updateTime', util.date('Y-m-d H:i:s', new Date())).value();
-    var restaurantRes = restaurant.get('restaurant_list').find({id: req.body.id}).value();
+    if (req && reqBody.address) {
+        restaurantDB.set('address', reqBody.address).value();
+    }
+
+    restaurantDB.set('updateTime', util.date('Y-m-d H:i:s', new Date())).value();
+    var restaurantRes = restaurantDB.value();
     var resObject = {code: 0, id: restaurantRes.id, address: restaurantRes.address, name: restaurantRes.name,
         createTime: restaurantRes.createTime, updateTime: restaurantRes.updateTime};
     res.json(resObject);

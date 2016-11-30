@@ -1,11 +1,11 @@
-webpackJsonp([1],{
+webpackJsonp([2],{
 
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	__webpack_require__(166);
+	__webpack_require__(168);
 
 	/*
 		动态设置publicPath，在正式环境运行的时候为绝对路径，如果需要手动指定，可以直接设置
@@ -118,7 +118,7 @@ webpackJsonp([1],{
 
 /***/ },
 
-/***/ 166:
+/***/ 168:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

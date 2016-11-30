@@ -1,0 +1,93 @@
+.app {
+  width: 80%;
+  text-align: center;
+  margin: 0 auto;
+  color: grey;
+  padding-top: 50px;
+}
+html,
+body {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  height: 100%;
+  font-family: "\5FAE\8F6F\96C5\9ED1";
+  color: #1a1a1a;
+  background: #EEE;
+}
+.container {
+  height: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.restitle {
+  position: relative;
+  font-size: 30px;
+  color: #000;
+  font-weight: bold;
+}
+table.eatTable {
+  position: absolute;
+  left: 18%;
+  top: 10%;
+  width: 60%;
+  text-align: center;
+}
+.del,
+.update,
+.addRow,
+.conform,
+.delform {
+  border: none;
+  padding: 0 20px;
+  margin: -5px 1px;
+  height: 30px;
+  line-height: 20px;
+  outline: none;
+  color: #fff;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #478fca;
+  font-size: 14px;
+  cursor: pointer;
+}
+.addRow {
+  position: relative;
+  left: -45%;
+}
+.conform,
+.delform {
+  position: relative;
+  margin-top: 20px;
+}
+.resform {
+  margin-left: -200px;
+  margin-top: -125px;
+  position: absolute;
+  width: 400px;
+  height: 250px;
+  left: 50%;
+  top: 50%;
+  background-color: #eee;
+  border-radius: 6px;
+  font-size: 22px;
+  z-index: 1000;
+  text-align: center;
+}
+.resform-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(55, 55, 55, 0.6);
+  height: 100%;
+  z-index: 1000;
+}
+#resname,
+#resaddress {
+  height: 22px;
+  width: 240px;
+}

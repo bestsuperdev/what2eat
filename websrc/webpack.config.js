@@ -7,6 +7,7 @@ module.exports = {
 	context: path.join(__dirname,'./src/entries'),
 	entry: {
 		main : './main.js',
+		admin : './admin.js',
 		commons : ['react','react-dom']
 	},
 	output: {
@@ -51,7 +52,14 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template : path.join(__dirname,'src/index.html'),
 			inject: true,
-			chunks: ['commons','main']
+			chunks : ['commons', 'main'],
+			filename : "index.html"
+		}),
+		new HtmlWebpackPlugin({
+			template : path.join(__dirname,'src/admin.html'),
+			inject: true,
+			chunks : ['commons', 'admin'],
+			filename : "admin.html"
 		})
 	]
 
