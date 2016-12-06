@@ -68,7 +68,6 @@ $('#myModalAdd').on('shown.bs.modal', function (e) {
 			 $("#conform").show();
      }
 )
-
 $('#updateform').click(
 	function (){
 				var data = {id : idvalue, name : $('#resname').val(), address : $('#resaddress').val()};	
