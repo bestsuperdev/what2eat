@@ -14,7 +14,7 @@ for (var i = scripts.length - 1; i >= 0; i--) {
 	}
 }
 
-var ajax = require("../scripts/utils/ajax");
+var {ajax} = require("../scripts/utils/ajax");
 var $btn = document.querySelector('#btn');
 $btn.hidden=false;
 var $container = document.querySelector('#container');
