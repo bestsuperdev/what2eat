@@ -13,48 +13,59 @@
   <![endif]-->
 </head>
 <body>
-<div class="container"  id="container">
-  <p class="restitle" hidden="true">餐厅列表</p>
-  <table id="eatTable" border="1" cellpadding="8" cellspacing="0" class="eatTable" hidden="true">
-    <tr>
-      <th>餐厅名称</th>
-      <th>餐厅地址</th>
-      <th>录入时间</th>
-      <th>修改时间</th>
-      <th>操作</th>
-    </tr>
-    <tr id="">
-      <td colspan="5" >
-        <input type="button" name="addRow"  class="addRow" value="添加"/>
-      </td>
-    </tr>
-  </table>
-<!--  <div style="float:right;position: absolute;left:90%;top:90%;">  
-    <table border="0" cellpadding="0" cellspacing="0">  
-        <tr>  
-            <td>
-                <a href="javascript:void(0)" style="color: Black;text-decoration: none">上一页</a>  
-            </td>  
-            <td>   
-                  <span id="pageindex" style="font-weight: bold;"></span>    
-            </td>  
-            <td>  
-                <a href="javascript:void(0)" style="color: Black;text-decoration: none">下一页</a>  
-            </td>  
-        </tr>  
-    </table>  
-  </div> --> 
+  <div class="container"  id="container">
+    <p class="restitle">餐厅列表</p>
+    <table id="eatTable" class="eatTable table table-striped table-bordered " hidden="true">
+      <tr>
+        <th>餐厅名称</th>
+        <th>餐厅地址</th>
+        <th>录入时间</th>
+        <th>修改时间</th>
+        <th>操作</th>
+      </tr>
+      <tr id="">
+        <td colspan="5">
+          <button id= "addRow" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
+            添加
+          </button>
+        </td>
+      </tr>
+    </table>
 </div>
-<div class="resform-mask" id="resform-mask">
-  <div id="resform" class="resform" hidden="true" >
-   <form style="margin:10px">
-       <h3>新增餐厅信息</h3>
-          餐厅名称：<input type="text" name="resname" id="resname" value=""/></br>
-          餐厅地址：<input type="text" name="resaddress" id="resaddress" value=""/></br>
-          <input type="button" name="" value="确定" id="conform" class="conform"/> 
-          <input type="button" name="" value="取消" id="delform" class="delform"/> 
-   </form>
+<div style="position: relative;margin-left:-134px;left: 50%;">
+  <ul class="pagination">
+    <li><a href="#">&laquo;</a></li>
+    <li class="active"><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">6</a></li>
+    <li><a href="#">&raquo;</a></li>
+  </ul>
+</div> 
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >&times;
+        </button>
+        <h3 class="modal-title" id="h3">
+          新增餐厅信息
+        </h3>
+      </div>
+      <div class="modal-body" style="line-height: 30px">
+        餐厅名称：<input type="text" name="resname" id="resname"/></br>
+        餐厅地址：<input type="text" name="resaddress" id="resaddress"  placeholder=" " /></br>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary "  id="conform">确定</button>
+          <button type="button" class="btn btn-primary "  id="updateform">确定</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true" >取消</button>
+      </div>
+    </div>
   </div>
+</div>
 </div>
 </body>
 </html>
