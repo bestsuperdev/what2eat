@@ -5,7 +5,7 @@ webpackJsonp([2],{
 
 	'use strict';
 
-	__webpack_require__(168);
+	__webpack_require__(175);
 
 	/*
 		动态设置publicPath，在正式环境运行的时候为绝对路径，如果需要手动指定，可以直接设置
@@ -21,34 +21,21 @@ webpackJsonp([2],{
 	  }
 	}
 
-	var foodName;
-	var foods;
-	var xmlHttp;
-	if (window.XMLHttpRequest) {
-	  //IE7，Firefox,Chrome,Opera,Safari
-	  xmlHttp = new XMLHttpRequest();
-	} else {
-	  xmlHttp = new ActiveXObject("Microsoft.HMLHTTP");
-	}
+	var _require = __webpack_require__(7),
+	    ajax = _require.ajax;
 
-	xmlHttp.onreadystatechange = function () {
-	  if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-	    foodName = xmlHttp.responseText;
-	    foods = JSON.parse(foodName);
-	  }
-	};
-	xmlHttp.open("GET", "/api/restaurant/list", true);
-	xmlHttp.send();
 	var $btn = document.querySelector('#btn');
 	$btn.hidden = false;
 	var $container = document.querySelector('#container');
 	var $text = document.querySelector('#text');
 	var $h1 = document.querySelector('h1');
-	var date = new Date();
 	var state = 'stop';
 	var bghandler = null;
 	var handler = null;
+	var foodName;
+	var foods;
 
+	var date = new Date();
 	if (date.getHours() >= 20) {
 	  $h1.innerHTML = '夜宵吃什么呢？';
 	} else if (date.getHours() >= 13) {
@@ -57,6 +44,14 @@ webpackJsonp([2],{
 	  $h1.innerHTML = '中午吃什么呢？';
 	}
 
+	ajax({
+	  type: "GET",
+	  url: "/api/restaurant/list",
+	  body: "",
+	  success: function success(eve) {
+	    foods = eve;
+	  }
+	});
 	function generateTemp() {
 	  var $span = document.createElement('span');
 	  $span.className = 'temp';
@@ -83,6 +78,9 @@ webpackJsonp([2],{
 	    bghandler = null;
 
 	    $btn.innerHTML = '开始';
+	    if (foods == null) {
+	      return;
+	    }
 	    $text.innerHTML = foods[Math.floor(Math.random() * foods.length)].name + " " + foods[Math.floor(Math.random() * foods.length)].address;
 	  } else if (state === 'stop') {
 	    console.log(3);
@@ -91,6 +89,9 @@ webpackJsonp([2],{
 	    var run = function run() {
 	      if (bghandler == null) {
 	        bghandler = setInterval(generateTemp, 50);
+	      }
+	      if (foods == null) {
+	        return;
 	      }
 	      $text.innerHTML = foods[Math.floor(Math.random() * foods.length)].name;
 	      clearTimeout(handler);
@@ -105,12 +106,10 @@ webpackJsonp([2],{
 	}, false);
 	$btn.addEventListener('click', function (event) {
 	  event.stopPropagation();
-	  console.log('click');
 	  start();
 	}, false);
 	document.addEventListener('keyup', function (event) {
 	  if (event.which === 13) {
-	    console.log('keyup');
 	    test = 0;
 	    start();
 	  }
@@ -118,7 +117,7 @@ webpackJsonp([2],{
 
 /***/ },
 
-/***/ 168:
+/***/ 175:
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

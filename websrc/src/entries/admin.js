@@ -1,5 +1,8 @@
-require('bootstrap/dist/css/bootstrap.css')
-require('styles/admin.less')
+window.$ = window.jQuery = require('jquery/dist/jquery.min.js');
+
+require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap/dist/js/bootstrap.min.js');
+require('styles/admin.less');
 /*
 	动态设置publicPath，在正式环境运行的时候为绝对路径，如果需要手动指定，可以直接设置
 	__webpack_public_path__的值，如  __webpack_public_path__ = '/base/bundles/'
@@ -14,8 +17,6 @@ for (var i = scripts.length - 1; i >= 0; i--) {
 	}
 }
 
-window.$ = window.jQuery = require('jquery')
-require('bootstrap')
 var {getList,save} = require('../scripts/remotes')
 var {ajax} = require('../scripts/utils/ajax');
 var {addRow} = require('../scripts/table/addRow');

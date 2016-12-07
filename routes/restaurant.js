@@ -4,9 +4,43 @@ var low = require('lowdb');
 var restaurant = low('db/restaurant.json');
 var util = require('../util');
 
-router.get('/list', function(req, res) {
-    var restaurantList = restaurant.get('restaurant_list').value();
-    res.json(restaurantList);
+router.post('/list', function(req, res) {
+
+    var reqBody = req.body;
+    var restaurantList = restaurant.get('restaurant_list');
+    var restaurantSize = restaurantList.size().value();
+    var pageSize = reqBody.pageSize;
+    var pageIndex = reqBody.pageIndex || 1;
+    var pageSumNum = 0;
+
+    // for (var item in req.body) {
+    //     if (item == 'pageSize') {
+    //         continue;
+    //     }
+    //     if (!req.body[item]) {
+    //         return res.json({code: -1, message: item + ' undefined'});
+    //     }
+    // }
+
+    if (restaurantSize > 0 && pageIndex > 0) {
+        if (restaurantSize % pageSize > 0) {
+            pageSumNum = Math.floor(restaurantSize / pageSize) + 1;
+        } else {
+            pageSumNum = restaurantSize / pageSize;
+        }
+    }
+
+    if (pageSize) {
+        restaurantList = restaurantList.filter(function (item, i) {
+            return item.id < (pageIndex * pageSize)
+        }).filter(function (item, i) {
+            return item.id >= ((pageIndex - 1) * pageSize)
+        });
+    }
+
+    var resObject = {code: 0, pageIndex, pageSumNum, restaurantList: restaurantList.value()};
+
+    res.json(resObject);
 });
 
 router.post('/save', function (req, res) {
@@ -50,11 +84,13 @@ router.post('/edit', function (req, res) {
     var restaurantDB = restaurant.get('restaurant_list').find({id: reqBody.id});
 
     if (req && reqBody.name) {
-        restaurantDB.set('name', reqBody.name).value();
+        // restaurantDB.set('name', reqBody.name).value();
+        restaurantDB.assign({ name: reqBody.name}).value();
     }
 
     if (req && reqBody.address) {
-        restaurantDB.set('address', reqBody.address).value();
+        // restaurantDB.set('address', reqBody.address).value();
+        restaurantDB.assign({ address: reqBody.address}).value();
     }
 
     restaurantDB.set('updateTime', util.date('Y-m-d H:i:s', new Date())).value();
