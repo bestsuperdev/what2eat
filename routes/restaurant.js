@@ -7,20 +7,15 @@ var util = require('../util');
 router.post('/list', function(req, res) {
 
     var reqBody = req.body;
-    var restaurantList = restaurant.get('restaurant_list');
-    var restaurantSize = restaurantList.size().value();
+    var restaurantList = restaurant.get('restaurant_list').sortBy('updateTime').value().reverse();
+    restaurantList.forEach(function (item, i) {
+        restaurant.get('restaurant_list').find({id: item.id}).assign({id: i}).value();
+    });
+
+    var restaurantSize = restaurantList.length;
     var pageSize = reqBody.pageSize;
     var pageIndex = reqBody.pageIndex || 1;
     var pageSumNum = 0;
-
-    // for (var item in req.body) {
-    //     if (item == 'pageSize') {
-    //         continue;
-    //     }
-    //     if (!req.body[item]) {
-    //         return res.json({code: -1, message: item + ' undefined'});
-    //     }
-    // }
 
     if (restaurantSize > 0 && pageIndex > 0) {
         if (restaurantSize % pageSize > 0) {
@@ -35,10 +30,10 @@ router.post('/list', function(req, res) {
             return item.id < (pageIndex * pageSize)
         }).filter(function (item, i) {
             return item.id >= ((pageIndex - 1) * pageSize)
-        });
+        }).reverse();
     }
 
-    var resObject = {code: 0, pageIndex, pageSumNum, restaurantList: restaurantList.value()};
+    var resObject = {code: 0, pageIndex, pageSumNum, restaurantList};
 
     res.json(resObject);
 });
@@ -54,10 +49,10 @@ router.post('/save', function (req, res) {
     if (req.body.address && req.body.name) {
         var date = util.date('Y-m-d H:i:s', new Date());
         var listSize = restaurant.get('restaurant_list').size().value();
-        var newRestaurant = {id: listSize + "", address: req.body.address, name: req.body.name, createTime: date, updateTime: date};
+        var newRestaurant = {id: listSize, address: req.body.address, name: req.body.name, createTime: date, updateTime: date};
         restaurant.get('restaurant_list').push(newRestaurant).value();
-        newRestaurant.code = 0;
-        res.json(newRestaurant);
+        var resObject = {code: 0, restaurant: newRestaurant};
+        res.json(resObject);
     } else {
         res.json({code: -1, message: 'save failed'});
     }
